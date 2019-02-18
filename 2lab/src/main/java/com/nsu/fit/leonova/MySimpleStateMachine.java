@@ -11,11 +11,11 @@ public class MySimpleStateMachine implements StateMachine{
     private ArrayList<Integer> finishStates = new ArrayList<>();
     private Map<Integer, Map<String, Integer>> transitions = new HashMap<>();
 
-    public MySimpleStateMachine(BufferedReader reader) throws IOException {
+    public MySimpleStateMachine(BufferedReader reader) throws IOException, EmptyFileException {
 
         String string = reader.readLine();
         if(string == null){
-            //TODO: throw exception
+            throw new EmptyFileException("Couldn't read file with state machine");
         }
 
         for(String state : string.split(" ")){
@@ -26,7 +26,7 @@ public class MySimpleStateMachine implements StateMachine{
         while((newTransitionStr = reader.readLine()) != null){
             String[] newTransition = newTransitionStr.split(" ");
             if(newTransition.length != 3){
-                //Todo: throw exception
+                throw new IllegalArgumentException("Bad number of arguments for transition: " + newTransitionStr);
             }
             int beginState = Integer.parseInt(newTransition[0]);
             String input = newTransition[1];
@@ -38,16 +38,16 @@ public class MySimpleStateMachine implements StateMachine{
     }
 
     @Override
-    public int getNextState(int currentState, char input) {
+    public int getNextState(int currentState, char input) throws UnknownStateException {
 
         Map<String, Integer> allTransitionForState = transitions.get(currentState);
         if(allTransitionForState == null){
-            //TODO: throw exception
+            throw new UnknownStateException("There is no transition for this state: " + currentState);
         }
 
         Integer nextState = allTransitionForState.get(String.valueOf(input));
         if(nextState == null){
-            //TODO: throw exception
+            throw new UnknownStateException("There is no transition for this state and input: " + currentState + " " + input);
         }
         return nextState;
     }

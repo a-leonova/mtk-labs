@@ -25,9 +25,11 @@ public class Main {
             }
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("Couldn't find file: " + e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Something really broken: " + e.getMessage());
+        } catch (EmptyFileException | IllegalArgumentException | UnknownStateException e) {
+            System.err.println();
         }
     }
 }
