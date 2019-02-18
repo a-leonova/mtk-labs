@@ -1,0 +1,16 @@
+File with state machine:
+First line is for finish states.
+All others lines are for transitions's decriptions.
+All finish states should be enumerated and splited with spaces (" ")
+Same with transitions.
+
+P.s. 0 is the begin state.
+
+Example:
+2
+0 a 1
+0 b 2
+1 a 1
+1 b 2
+2 a 2
+2 b 3
