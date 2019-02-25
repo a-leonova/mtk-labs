@@ -2,10 +2,7 @@ package com.nsu.fit.leonova;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NotDeterminateAutomat {
 
@@ -44,7 +41,36 @@ public class NotDeterminateAutomat {
         }
     }
 
+    public int recognizeString(String expr) throws UnknownStateException {
+        Configuration startConfiguration = new Configuration(0, 0);
+        Stack<Configuration> stack = new Stack<>();
+        stack.push(startConfiguration);
 
+        while(!stack.empty()){
+            Configuration currentConfiguration = stack.pop();
+
+            if(expr.length() <= currentConfiguration.getIndex()){
+                if(finishStates.contains(currentConfiguration.getState())){
+                    return currentConfiguration.getState();
+                }
+                continue;
+            }
+
+            char currentSymb = expr.charAt(currentConfiguration.getIndex());
+            Map<Character, List<Integer>> allTransitionsForState = transitions.get(currentConfiguration.getState());
+            if(allTransitionsForState == null){
+                throw new UnknownStateException("No transitions for: " + currentConfiguration.getState());
+            }
+            List<Integer> smth = allTransitionsForState.get(currentSymb);
+            if(smth == null){
+                throw new UnknownStateException("No transitions for: " + currentConfiguration.getState() + " " + currentSymb);
+            }
+            for(Integer i : smth){
+                stack.push(new Configuration(i, currentConfiguration.getIndex() + 1));
+            }
+        }
+        return -1;
+    }
 
 
 }
